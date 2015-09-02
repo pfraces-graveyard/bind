@@ -3,5 +3,5 @@
   "mujs/mu.list": "*",
   "mujs/mu.tree": "*",
   "pfraces/domo": "*",
-  "pfraces/domo.on": "*"
+  "pfraces/domo.on.extras": "*"
 }

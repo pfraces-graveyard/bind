@@ -1,0 +1,7 @@
+{
+  "pfraces/define": "*",
+  "mujs/mu.list": "*",
+  "mujs/mu.tree": "*",
+  "pfraces/domo": "*",
+  "pfraces/domo.on": "*"
+}

@@ -5,7 +5,6 @@ define('bind', function (require) {
       path   = require('mu.tree.path');
 
   var dom    = require('domo').use({
-    clone    : require('domo.clone'),
     native   : require('domo.native'),
     val      : require('domo.val'),
     onInput  : require('domo.on.input')
@@ -25,16 +24,25 @@ define('bind', function (require) {
     };
   };
 
-  var bind = function (selector, model) {
-    var template = dom(selector).clone();
-    template.outerHTML = template.innerHTML;
+  var fragment = function(html) {
+    var doc = document.createDocumentFragment(),
+        div = document.createElement('div'),
+        it;
 
-    dom('[bind=*]', template).native(function (node) {
+    div.innerHTML = html;
+    while (it = div.firstChild) { doc.appendChild(it); }
+    return doc;
+  };
+
+  var bind = function (id, model) {
+    var template = fragment(document.getElementById(id).innerHTML);
+
+    dom('[bind]', template).native(function (node) {
       var el = element(node),
+          $el = dom(node),
           expr = el.attr.bind.split('.'),
           index = expr.pop(),
-          parent = path(model, expr),
-          $el = dom(el);
+          parent = path(model, expr);
 
       parent.on(index, $el.val);
       $el.onInput(parent[index]);

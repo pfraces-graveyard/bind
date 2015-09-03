@@ -44,8 +44,13 @@ define('bind', function (require) {
           index = expr.pop(),
           parent = path(model, expr);
 
-      parent.on(index, $el.val);
-      $el.onInput(parent[index]);
+      if (el.name === 'input') {
+        parent.on(index, $el.val);
+        $el.onInput(parent[index]);
+        return;
+      }
+
+      parent.on(index, $el.html);
     });
 
     return template;

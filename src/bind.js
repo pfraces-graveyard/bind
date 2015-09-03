@@ -7,6 +7,7 @@ define('bind', function (require) {
   var dom    = require('domo').use({
     native   : require('domo.native'),
     val      : require('domo.val'),
+    html     : require('domo.html'),
     onInput  : require('domo.on.input')
   });
 

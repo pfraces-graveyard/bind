@@ -1,57 +1,32 @@
 define('bind', function (require) {
   'use strict';
 
-  var reduce = require('mu.list.reduce'),
-      path   = require('mu.tree.path');
+  var path  = require('mu.tree.path');
 
-  var dom    = require('domo').use({
-    native   : require('domo.native'),
-    val      : require('domo.val'),
-    html     : require('domo.html'),
-    onInput  : require('domo.on.input')
+  var dom   = require('domo').use({
+    attr    : require('domo.attr'),
+    val     : require('domo.val'),
+    html    : require('domo.html'),
+    onInput : require('domo.on.input')
   });
 
-  var attributes = function (node) {
-    return reduce(node.attributes, {}, function (acc, item) {
-      acc[item.name] = item.value;
-      return acc;
-    });
-  };
+  var bind = function (selector, model) {
+    var template = dom(dom(selector).html());
 
-  var element = function (node) {
-    return {
-      name: node.tagName.toLowerCase(),
-      attr: attributes(node)
-    };
-  };
-
-  var fragment = function(html) {
-    var doc = document.createDocumentFragment(),
-        div = document.createElement('div'),
-        it;
-
-    div.innerHTML = html;
-    while (it = div.firstChild) { doc.appendChild(it); }
-    return doc;
-  };
-
-  var bind = function (id, model) {
-    var template = fragment(document.getElementById(id).innerHTML);
-
-    dom('[bind]', template).native(function (node) {
-      var el = element(node),
-          $el = dom(node),
-          expr = el.attr.bind.split('.'),
+    dom(template, '[bind]').each(function (node) {
+      var tagName = node.tagName.toLowerCase(),
+          $node = dom(node),
+          expr = $node.attr('bind').split('.'),
           index = expr.pop(),
           parent = path(model, expr);
 
-      if (el.name === 'input') {
-        parent.on(index, $el.val);
-        $el.onInput(parent[index]);
+      if (tagName === 'input') {
+        parent.on(index, $node.val);
+        $node.onInput(parent[index]);
         return;
       }
 
-      parent.on(index, $el.html);
+      parent.on(index, $node.html);
     });
 
     return template;
